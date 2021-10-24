@@ -1,0 +1,62 @@
+Aim: Django with apache2 mod_wsgi
+
+
+Assumptions:
+    apache2 installed
+    Let's encrypt/Certbot certs installed
+    Django project created with production settings
+
+
+STATIC_ROOT = static files are collected
+STATIC_URL = maps a URL to STATIC_ROOT
+
+
+Collect all static files:
+    INSTALLED_APPS in settings.py:
+        INSTALLED_APPS = [
+            'django.contrib.admin',
+            .
+            .
+            .
+            .
+            'django.contrib.staticfiles',
+        ]
+    Set STATIC_URL and STATIC_ROOT in settings.py
+        STATIC_URL = '/static/'
+        STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+    Run:
+        django-admin collectstatic
+
+
+
+Example:
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+        Protocols h2 http/1.1
+        ServerAdmin webmaster@localhost
+        ServerName my.example.com
+        ServerAlias my.example.com
+
+        Alias /static /path/to/project-root/static
+        <Directory /path/to/project-root/static>
+                Require all granted
+        </Directory>
+
+        <Directory /path/to/project-root/dir-that-has-wsgi-file>
+                <Files wsgi.py>
+                        Require all granted
+                </Files>
+        </Directory>
+
+        WSGIDaemonProcess my.example.com display-name=some-name python-path=/path/to/project-root python-home=/path/to/venv
+        WSGIProcessGroup my.example.com
+        WSGIScriptAlias / /path/to/project-root/dir-that-has-wsgi-file/wsgi.py
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        SSLCertificateFile /path/to/cert.pem
+        SSLCertificateKeyFile /path/to/private_key.pem
+        Include /etc/letsencrypt/options-ssl-apache.conf
+</VirtualHost>
+</IfModule>
