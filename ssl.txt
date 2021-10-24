@@ -1,0 +1,22 @@
+Aim: Let's encrypt SSL with apache2 on Ubuntu 20.04
+
+Assumptions:
+    Domain registered
+    Subdomains have required CNAME records created
+    Apache virtualhosts configs with correct ServerName and ServerAlias are created
+        ServerName = Hostname and port that the server uses to identify itself
+        ServerAlias = Alternate names for a host used when matching requests to name-virtual hosts
+        Usually ServerName === ServerAlias
+
+DigitalOcean: https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-20-04
+
+
+Install certbot:
+    sudo apt install certbot python3-certbot-apache
+
+
+Install certs:
+    sudo certbot --apache
+    Supply all domains and subdomains that are registered and get certs for them
+    Select option - redirect all traffic to HTTPS
+
