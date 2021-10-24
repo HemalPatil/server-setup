@@ -1,0 +1,28 @@
+Aim: Enable HTTP2 on Apache2
+
+Assumptions:
+    Apache2 >= 2.4.41 installed
+        check version with
+            apachectl -version
+    Ubuntu >= 20.04 (not necessary)
+
+
+Install and enable http2 module:
+    sudo a2enmod http2
+
+
+Modify virtualhost:
+    cd /etc/apache2/sites-enabled
+    sudo vi my-enabled-ste.conf
+    Modify <VirtualHost> as follows:
+        <VirtualHost *:443>
+            Protocols h2 http/1.1
+            .
+            .
+            .
+        </VirtualHost>
+
+
+Verify with devtools or curl:
+    curl -I -s https://example.com | grep HTTP
+        Expected: HTTP/2 200
