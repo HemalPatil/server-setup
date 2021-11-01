@@ -1,0 +1,67 @@
+npm install react react-dom
+npm install -D typescript @types/react @types/react-dom
+
+
+
+
+
+
+
+// tsconfig.json
+{
+    "compilerOptions": {
+        "lib": ["DOM", "ES2020"],
+        "jsx": "react-jsx",     // Latest standard. Allows you to use _jsx calls instead of React.createElement. Read TS and React docs to know more.
+        "module": "ES2020",
+        "moduleResolution": "node",
+        "target": "ES2020"
+    }
+}
+
+
+
+
+
+
+// webpack.config.js
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');   // Inject compiled JS into index.html
+
+const isProduction = process.env.NODE_ENV == 'production';
+
+const config = {
+    entry: './src/index.tsx',
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, './src/index.html')
+        })
+    ],
+    module: {
+        rules: [{
+            test: /\.(ts|tsx)$/i,
+            loader: 'ts-loader',
+            exclude: ['/node_modules/'],
+        }]
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    }
+};
+
+module.exports = () => {
+    if (isProduction) {
+        config.mode = 'production';
+    } else {
+        config.mode = 'development';
+    }
+    return config;
+};
+
+
+// Set NODE_ENV if production build required
+export NODE_ENV=production
+// Compile
+npx webpack
