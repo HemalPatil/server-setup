@@ -1,0 +1,9 @@
+// List all databases
+show dbs
+show databases
+
+// Show current database
+db
+
+// Use database (can be used on a non-existent db as well)
+use myNewDb

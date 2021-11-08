@@ -1,0 +1,8 @@
+// Show git branch in terminal prompt
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+// Yellow coloured git branch name
+// Should add to PS1 variable
+\[\033[01;33m\]$(parse_git_branch)

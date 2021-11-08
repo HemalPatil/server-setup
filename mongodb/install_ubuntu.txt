@@ -1,0 +1,28 @@
+// Import public key
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+
+// Create list file
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+
+// Reload package database
+sudo apt-get update
+
+// Install
+sudo apt-get install -y mongodb-org
+
+// File created
+// Data directory
+/var/lib/mongodb
+// Logs
+/var/log/mongodb
+// Configuration file
+/etc/mongod.conf
+
+// Start service
+sudo systemctl start mongod
+
+// Connect (default port 27017)
+mongosh
+
+// MongoSH docs
+https://docs.mongodb.com/mongodb-shell/
