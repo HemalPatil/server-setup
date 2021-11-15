@@ -7,3 +7,14 @@ db
 
 // Use database (can be used on a non-existent db as well)
 use myNewDb
+
+// Insert one document
+db.tableName({"field1":"value1", "field2":"value2"})
+
+// Insert many documents
+db.tableName.insertMany([
+    {"field1":"value1", "field2":"value2"},
+    {"field1":"value1", "field2":"value2"},
+    {"field1":"value1", "field2":"value2"},
+    {"field1":"value1", "field2":"value2"}
+])

@@ -1,0 +1,3 @@
+// Ubuntu
+// To show a message at login
+// Create the script and place it or lits symlink in /etc/update-motd.d
