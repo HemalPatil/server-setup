@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        hr {
+            margin-bottom: 5px;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="toggle()">Toggle</button>
+    <br /><br />
+    <div style="display: flex; flex-direction: row;">
+        <div style="flex: 1 1 auto;" id="regular">Regular<br /></div>
+        <div style="flex: 1 1 auto;" id="debouncedTrailing">Debounced (trailing)<br /></div>
+        <div style="flex: 1 1 auto;" id="debouncedLeading">Debounced (leading)<br /></div>
+        <div style="flex: 1 1 auto;" id="throttled">Throttled<br /></div>
+    </div>
+    <script>
+        let regular = document.getElementById('regular');
+        let debouncedLeading = document.getElementById('debouncedLeading');
+        let debouncedTrailing = document.getElementById('debouncedTrailing');
+        let throttled = document.getElementById('throttled');
+        function debounce(handler, delay, lead = false) {
+            let timer;
+            if (lead) {
+                return (...args) => {
+                    if (!timer) {
+                        handler.apply(this, args);
+                    }
+                    window.clearTimeout(timer);
+                    timer = window.setTimeout(() => timer = undefined, delay);
+                };
+            } else {
+                return (...args) => {
+                    window.clearTimeout(timer);
+                    timer = window.setTimeout(() => handler.apply(this, args), delay);
+                };
+            }
+        }
+        function throttle(handler, interval) {
+            let timer;
+            let last;
+            return (...args) => {
+                window.clearTimeout(last);
+                if (timer) {
+                    last = window.setTimeout(() => handler.apply(this, args), interval);
+                } else {
+                    handler.apply(this, args);
+                    timer = window.setTimeout(() => timer = undefined, interval);
+                }
+            };
+        }
+        function addHr(element, val) {
+            // element.append(document.createElement('hr'));
+            element.append(document.createTextNode(val));
+            element.append(document.createElement('br'));
+        }
+        let trailing = debounce((val) => addHr(debouncedTrailing, val), 1000);
+        let leading = debounce((val) => addHr(debouncedLeading, val), 1000, true);
+        let ttd = throttle((val) => addHr(throttled, val), 1000);
+        let i = 0;
+        let toggle = (function() {
+            let intervalId = null;
+            return function() {
+                if (intervalId) {
+                    window.clearInterval(intervalId);
+                    intervalId = null;
+                } else {
+                    intervalId = window.setInterval(() => {
+                        addHr(regular, i);
+                        trailing(i);
+                        leading(i);
+                        ttd(i);
+                        ++i;
+                    }, 250);
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
