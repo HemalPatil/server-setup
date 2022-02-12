@@ -1,7 +1,29 @@
+alias ls='ls -G'
+alias ll='ls -alF'
+
+mkcd() {
+    mkdir $1
+    cd $1
+}
+
 // Show git branch in terminal prompt
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
+
+// Terminal background colours
+//     Ubuntu bash - #2E3436
+//     Mac bash    - #1F2324
+
+// ANSI colour codes
+// Yellow - C4A000
+// Green  - 4E9A06
+// Blue   - 3465A4
+
+// Mac PS1 variable
+autoload -U colors && colors
+setopt prompt_subst
+PS1='%{$fg[green]%}%n@dehaat-macm1:%{$fg[blue]%}%~%{$fg[yellow]%}$(parse_git_branch)%{$reset_color%}$ '
 
 // Yellow coloured git branch name
 // Should add to PS1 variable
